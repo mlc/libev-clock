@@ -17,7 +17,7 @@
 #include <termios.h>
 #include <unistd.h>
 
-class Silly {
+class Clock {
   ev::periodic clock;
   ev::sig sigwatch;
   ev::io stdinwatch;
@@ -67,20 +67,20 @@ public:
     stop();
   }
 
-  Silly() : did_store_termios(false) {
-    clock.set <Silly, &Silly::foo> (this);
+  Clock() : did_store_termios(false) {
+    clock.set <Clock, &Clock::foo> (this);
     clock.set(0, 1);
     clock.start();
 
-    sigwatch.set <Silly, &Silly::stop1> (this);
+    sigwatch.set <Clock, &Clock::stop1> (this);
     sigwatch.start(SIGINT);
 
     set_single_char(STDIN_FILENO);
-    stdinwatch.set <Silly, &Silly::stop2> (this);
+    stdinwatch.set <Clock, &Clock::stop2> (this);
     stdinwatch.start(STDIN_FILENO, ev::READ);
   }
 
-  ~Silly() {
+  ~Clock() {
     if (did_store_termios) {
       tcsetattr(STDIN_FILENO, TCSANOW, &stored_termios);
     }
@@ -95,7 +95,7 @@ int main(int argc, char** argv) {
   std::cout.imbue(mylocale);
   tzset();
 
-  Silly * ps = new Silly();
+  Clock * ps = new Clock();
 
   ev_loop(EV_DEFAULT_ 0);
 

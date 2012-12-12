@@ -49,9 +49,7 @@ public:
   }
 
   void stop() {
-    clock.stop();
-    sigwatch.stop();
-    stdinwatch.stop();
+    ev_break(EV_DEFAULT_ EVBREAK_ALL);
   }
 
   void stop1(ev::sig &w, int revents) {

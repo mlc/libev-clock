@@ -38,7 +38,7 @@ class Clock {
   }
 
 public:
-  void foo(ev::periodic& w, int revents) {
+  void tick(ev::periodic& w, int revents) {
     ev_tstamp ts = ev_now(EV_DEFAULT);
     time_t tt = (time_t) ts;
     char buf[256];
@@ -66,7 +66,7 @@ public:
   }
 
   Clock() : did_store_termios(false) {
-    clock.set <Clock, &Clock::foo> (this);
+    clock.set <Clock, &Clock::tick> (this);
     clock.set(0, 1);
     clock.start();
 
